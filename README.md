@@ -1,88 +1,223 @@
-# Sistema de Triagem Hospitalar
+﻿# Hospital Triage System (Sistema de Triagem Hospitalar)
 
-Projeto final desenvolvido para a disciplina de **Programação Orientada a Objetos** do curso de Ciência da Computação da **Universidade Federal do Ceará (UFC - Campus Russas)**.
+> **Language switch**: [English version](README.md) • [Português](README_pt.md)
 
-## 📋 Sobre o Projeto
+<div style="display: inline-block; margin-bottom: 15px;">
+  <img src="https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java" />
+  <img src="https://img.shields.io/badge/Swing-007396?style=for-the-badge&logo=java&logoColor=white" alt="Swing" />
+  <img src="https://img.shields.io/badge/JUnit-9b0000?style=for-the-badge&logo=junit5&logoColor=white" alt="JUnit 5" />
+  <img src="https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white" alt="Maven" />
+  <img src="https://img.shields.io/badge/GitHub-A5A5A5?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+</div>
 
-Este sistema simula o processo de triagem em uma unidade de emergência hospitalar. O objetivo é classificar pacientes com base na gravidade de seus sintomas (sinais vitais) e organizar o atendimento utilizando uma **Fila de Prioridade**, garantindo que os casos mais graves sejam atendidos primeiro, independentemente da ordem de chegada.
+## 📋 Table of Contents
 
-O sistema implementa conceitos fundamentais de POO e utiliza persistência de dados em arquivos.
-
-## 🚀 Funcionalidades
-
-* **Cadastro de Pacientes:** Registro de nome, CPF, cartão SUS e sintomas.
-* **Classificação de Risco:** Algoritmo automático que analisa sinais vitais (batimentos, temperatura, oxigenação, dor) para definir a prioridade (Cores: Vermelho, Laranja, Amarelo, Verde, Azul).
-* **Fila de Prioridade:** Gerenciamento inteligente da lista de espera.
-* **Interface Gráfica (GUI):** Interface amigável desenvolvida com Java Swing.
-* **Persistência:** Salvamento automático dos dados em arquivo (`pacientes.txt`) para manter o histórico entre execuções.
-
-## 🛠️ Tecnologias Utilizadas
-
-* **Java** (Linguagem base)
-* **Swing** (Interface Gráfica)
-* **JUnit 5** (Testes Unitários)
-* **MVC** (Arquitetura Model-View-Controller)
-
-## 🏗️ Arquitetura do Projeto
-
-O sistema segue o padrão de arquitetura **MVC** adaptado:
-
-### 1. Modelo (Model)
-Responsável pela representação dos objetos do domínio.
-* `Pessoa` (Classe Abstrata), `Paciente`, `Enfermeiro`.
-* `SinaisVitais`: Agrupa dados de saúde para classificação.
-
-### 2. Serviço (Controller/Business Logic)
-Contém a lógica pesada do sistema.
-* `Triagem`: Implementa a interface `Classificar` para definir a cor/prioridade.
-* `FilaAtendimento`: Gerencia a prioridade dos pacientes.
-
-### 3. Visão (View)
-* `TelaPrincipal`: Interface gráfica para interação com o usuário.
-
-### 4. Dados (Persistence)
-* `GerenciadorArquivos`: Manipula a leitura e escrita no arquivo `pacientes.txt`.
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Technologies](#technologies)
+- [Project Structure](#project-structure)
+- [Core Features](#core-features)
+- [Triage Rules](#triage-rules)
+- [UI Screenshots](#ui-screenshots)
+- [Setup](#setup)
+- [Run](#run)
+- [Testing](#testing)
+- [Data Persistence](#data-persistence)
+- [Future Improvements](#future-improvements)
+- [Author](#author)
 
 ---
 
-## 📊 Modelagem (UML)
+## 🎯 Overview
 
-Diagrama de classes detalhando os relacionamentos e heranças do sistema:
+Hospital Triage System is a desktop emergency room triage simulator built with Java and Swing. It is designed to capture patient data, validate vital signs, classify risk levels automatically, and manage a priority queue for service order.
 
-![Diagrama UML](assets/0.jpg)
+Key objectives:
+- Simulate real-world hospital triage flow
+- Emphasize Object-Oriented Design (POO) and MVC architecture
+- Guarantee persistence by evolving state across restarts via `pacientes.txt`
+- Provide unit-tested reliability with JUnit 5
 
 ---
 
-## 🖥️ Telas do Sistema
+## 🏗️ Architecture
 
-### 1. Cadastro e Preenchimento
-O enfermeiro insere os dados e os sinais vitais do paciente.
+The project follows MVC pattern:
 
+- **Model**: `Pessoa`, `Paciente`, `Enfermeiro`, `SinaisVitais`
+- **Service**: `Classificar`, `Triagem`, `FilaAtendimento`
+- **View**: `TelaPrincipal` Swing GUI
+- **Data**: `GerenciadorArquivos` for persistence
+
+### Workflow
+
+1. User registers a patient via form
+2. Patient vitals are validated and classified by `Triagem`
+3. `FilaAtendimento` orders patients by priority
+4. Queue state is saved in `pacientes.txt`
+
+---
+
+## 🛠️ Technologies
+
+- Java 17+
+- Swing
+- JUnit 5
+- Maven
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+  dados/
+    GerenciadorArquivos.java
+  excecoes/
+    DadoInvalidoException.java
+  modelo/
+    Pessoa.java
+    Paciente.java
+    Enfermeiro.java
+    SinaisVitais.java
+  servico/
+    Classificar.java
+    Triagem.java
+    FilaAtendimento.java
+  visao/
+    TelaPrincipal.java
+  testes/
+    TriagemTest.java
+    FilaAtendimentoTest.java
+    PacienteTest.java
+pacientes.txt
+README.md
+README_pt.md
+assets/
+  0.jpg
+  1.jpg
+  2.jpg
+  3.jpg
+  5.png
+  6.jpg
+```
+
+---
+
+## ✅ Core Features
+
+- Patient registration (name, CPF, SUS card, symptoms, vitals)
+- Vital-sign validation in `SinaisVitais`
+- Automatic classification in `Triagem` to color + priority
+- Priority queue in `FilaAtendimento` with load/save
+- Responsive UI with validation feedback
+
+---
+
+## 🚦 Triage Rules
+
+Color mapping:
+- Vermelho (1) - Emergency
+- Laranja (2) - High
+- Amarelo (3) - Moderate
+- Verde (4) - Low
+- Azul (5) - Minimal
+
+Input ranges checked:
+- `batimentos` (heart rate)
+- `temperatura`
+- `oxigenacao`
+- `dor`
+
+---
+
+## 🧩 UI Screenshots
+
+### Registration
 ![Tela de Cadastro](assets/2.jpg)
 
-### 2. Classificação Automática
-O sistema calcula o risco com base nos dados e exibe a prioridade (ex: Vermelho/Emergência).
-
+### Classification result
 ![Resultado da Classificação](assets/3.jpg)
 
-### 3. Fila de Espera
-Os pacientes são ordenados automaticamente na lista lateral de acordo com a gravidade.
-
+### Waiting queue
 ![Fila de Espera](assets/6.jpg)
 
----
+### UML Diagram
+![Diagrama UML](assets/0.jpg)
 
-## 💾 Persistência de Dados
-
-Os dados são salvos automaticamente em arquivo físico (`pacientes.txt`) para não serem perdidos.
-
+### Data persistence sample
 ![Arquivo de Texto](assets/5.png)
 
----
-
-## ✅ Testes Automatizados
-
-Foram implementados testes unitários com **JUnit 5** para garantir a robustez das regras de negócio (Classificação e Fila):
-
+### Tests evidence
 ![Evidência de Testes](assets/1.jpg)
 
+---
+
+## ⚙️ Setup
+
+### Requirements
+
+- Java 17+
+- Maven 3.8+
+
+### Install
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd "Sistema de Triagem Hospitalar"
+mvn clean install
+```
+
+---
+
+## ▶️ Run
+
+```bash
+mvn exec:java -Dexec.mainClass="visao.TelaPrincipal"
+```
+
+or open project in IDE and run `visao.TelaPrincipal`.
+
+---
+
+## 🧪 Testing
+
+```bash
+mvn test
+```
+
+- `TriagemTest`: classification cases
+- `FilaAtendimentoTest`: queue behavior & persistence
+- `PacienteTest`: model validation
+
+---
+
+## 💾 Data Persistence
+
+`pacientes.txt` is persisted with `;` separators.
+
+Format:
+`nome;cpf;sus;batimentos;temperatura;oxigenacao;dor;cor;prioridade`
+
+Example:
+`João.;11111111111;8888888888;110;38.2;92;4;Laranja;2`
+
+---
+
+## 🚀 Future Improvements
+
+- Migrate GUI to JavaFX or web frontend
+- DB persistence (SQLite/PostgreSQL)
+- Authentication & authorization
+- REST API layer for distributed use
+- Mobile-friendly front end
+
+---
+
+## 👨‍💻 Author
+
+**Nícolas Harnisch**
+
+- GitHub: https://github.com/NicolasHarnisch
+- LinkedIn: https://linkedin.com/in/nicolasharnisch
+- Email: nicolasgomeshar@gmail.com
